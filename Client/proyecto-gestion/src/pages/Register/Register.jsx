@@ -63,7 +63,11 @@ function Register() {
             .then(data => {
                 console.log(data)
                 if (data.message === "Pregunta y respuesta agregadas") {
-                    alert("Pregunta y respuesta agregadas")
+                    Swal.fire({
+                        icon: "success",
+                        text: "Pregunta y respuesta agregadas",
+                        timer: 3000
+                    })
                     setUsuario({
                         nombre: "",
                         apellido: "",

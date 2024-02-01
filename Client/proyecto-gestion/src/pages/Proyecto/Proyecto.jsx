@@ -11,6 +11,7 @@ import SidebarAdmin from '../../components/SidebarAdmin'
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Modal from 'react-modal';
+import Swal from 'sweetalert2';
 
 
 function Proyecto() {
@@ -48,22 +49,47 @@ function Proyecto() {
     }
 
     const handleEliminarProyecto = async () => {
-        alert("Haz eliminado este proeycto");
-        try {
-            const response = await fetch(`https://localhost:4000/proyectos/${proyectoId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: 'Esta acción eliminará el proyecto. ¿Deseas continuar?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, eliminar',
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(`https://localhost:4000/proyectos/${proyectoId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                    if (response.ok) {
+                        console.log(response);
+                        Swal.fire({
+                            icon:'success',
+                            text: 'El proyecto ha sido eliminado.'
+                        });
+                        // Redirige o realiza alguna acción después de eliminar el proyecto
+                        window.location.href = '/proyectos';
+                    } else {
+                        console.error('Error al eliminar el proyecto');
+                        Swal.fire({
+                            icon: 'error', 
+                            text: 'Hubo un problema al eliminar el proyecto.'
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error de red al eliminar el proyecto', error);
+                    Swal.fire({
+                        icon: 'error', 
+                        text: 'Hubo un problema al eliminar el proyecto.'
+                    });
                 }
-            });
-            if (response.ok) {
-                console.log(response)
-            } else {
-                console.error('Error al obtener los detalles del proyecto');
             }
-        } catch (error) {
-            console.error('Error de red al obtener los detalles del proyecto', error);
-        }
+        });
     };
 
     const closeModal = () => {
@@ -72,6 +98,13 @@ function Proyecto() {
     };
 
     const handleGuardarCambios = () => {
+        if (!nuevoNombre || !nuevaDescripcion || !nuevaFechaFin || !nuevoEstado) {
+            Swal.fire({
+                icon: 'warning',
+                text: 'Todos los campos son obligatorios. Por favor, completa todos los campos.'
+            });
+            return;
+        }
         console.log('Editar proyecto:', proyectoId);
         setNuevoNombre(proyecto.nombre);
         setNuevaDescripcion(proyecto.descripcion);
@@ -104,6 +137,13 @@ function Proyecto() {
     }, [proyectoId]);
 
     const handleEditarproyecto = async () => {
+        if (!nuevoNombre || !nuevaDescripcion || !nuevaFechaFin || !nuevoEstado) {
+            Swal.fire({
+                icon: 'warning',
+                text: 'Todos los campos son obligatorios. Por favor, completa todos los campos.'
+            });
+            return;
+        }
         console.log(nuevoNombre);
         console.log(nuevaDescripcion);
         console.log(nuevaFechaFin);
@@ -124,11 +164,17 @@ function Proyecto() {
 
             if (response.ok) {
                 console.log('Proyecto editado con éxito:', proyectoId);
-                alert('Proyecto editado con éxito');
+                Swal.fire({
+                    icon: "success",
+                    text: 'Proyecto editado con éxito'
+                })
                 // Cierra el modal después de que la solicitud PUT sea exitosa
                 setModalIsOpen(false);
             } else {
-                console.error('Error al editar el equipo');
+                Swal.fire({
+                    icon: "error",
+                    text: "Error al editar el proyecto",
+                })
             }
         } catch (error) {
             console.error('Error de red al editar el equipo', error);

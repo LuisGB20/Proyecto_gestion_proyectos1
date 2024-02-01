@@ -4,6 +4,7 @@ import Header from '../../components/header';
 import Anadir from '../../Img/anadir.png';
 import SidebarAdmin from '../../components/SidebarAdmin';
 import TarjetaMiembro from './Components/TarjetaMiembro';
+import Swal from 'sweetalert2';
 
 function NuevoEquipo() {
     const [proyectos, setProyectos] = useState([]);
@@ -66,42 +67,83 @@ function NuevoEquipo() {
     }
 
     const eliminarMiembro = (index) => {
-        // Función para eliminar un miembro del estado del equipo
-        setEquipo((prevEquipo) => {
-            const nuevosMiembros = [...prevEquipo.miembros];
-            nuevosMiembros.splice(index, 1);
-            return {
-                ...prevEquipo,
-                miembros: nuevosMiembros,
-            };
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: 'Esta acción eliminará al miembro del equipo. ¿Deseas continuar?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, eliminar miembro',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Llama a la función para eliminar el miembro solo si el usuario confirma
+                setEquipo((prevEquipo) => {
+                    const nuevosMiembros = [...prevEquipo.miembros];
+                    nuevosMiembros.splice(index, 1);
+                    return {
+                        ...prevEquipo,
+                        miembros: nuevosMiembros,
+                    };
+                });
+
+                Swal.fire({
+                    title: '¡Eliminado!',
+                    icon:'success',
+                    text: 'El miembro ha sido eliminado del equipo.'
+                });
+            }
         });
     };
 
     const crearEquipo = async (e) => {
         e.preventDefault();
-
-        try {
-            console.log(equipo);
-            const response = await fetch('https://localhost:4000/equipos', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // Agrega cualquier header necesario, como el token de autenticación
-                },
-                body: JSON.stringify(equipo),
+        if (equipo.nombre.trim() === '' || equipo.descripcion.trim() === '' || equipo.proyecto === null || equipo.miembros.length === 0) {
+            Swal.fire({
+                icon: 'Error', 
+                text: 'Por favor, completa todos los campos antes de crear el equipo.'
             });
-
-            if (response.ok) {
-                // Equipo creado exitosamente
-                alert('Equipo creado exitosamente');
-                // Redirigir al usuario a la página de inicio al hacer on click de la alerta
-                window.location.href = '/equipos'; // Cambia la ruta a la página de inicio
-            } else {
-                // Manejo de error, puedes mostrar un mensaje al usuario, etc.
-            }
-        } catch (error) {
-            console.error('Error al crear el equipo:', error);
+            return;
         }
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: 'Esta acción creará el equipo. ¿Deseas continuar?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, crear equipo',
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    console.log(equipo);
+                    const response = await fetch('https://localhost:4000/equipos', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(equipo),
+                    });
+                    if (response.ok) {
+                        // Equipo creado exitosamente
+                        Swal.fire({
+                            icon: "success",
+                            text: 'Equipo creado exitosamente',
+                        });
+                        // Redirigir al usuario a la página de inicio al hacer click en la alerta
+                        window.location.href = '/equipos'; // Cambia la ruta a la página de inicio
+                    } else {
+                        // Manejo de error, puedes mostrar un mensaje al usuario, etc.
+                    }
+                } catch (error) {
+                    console.error('Error al crear el equipo:', error);
+                    Swal.fire({
+                        icon: 'Error', 
+                        text: 'Hubo un problema al crear el equipo'
+                    });
+                }
+            }
+        });
     };
 
     useEffect(() => {
@@ -125,7 +167,7 @@ function NuevoEquipo() {
                                         Nombre
                                     </label>
                                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="Agrega un Nombre al Equipo"
-                                        value={equipo.nombre}
+                                        value={equipo.nombre} required
                                         onChange={(e) => setEquipo({ ...equipo, nombre: e.target.value })}
                                     />
                                 </div>
@@ -134,7 +176,7 @@ function NuevoEquipo() {
                                         Descripción
                                     </label>
                                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="text" type="text" placeholder="Describe información General sobre el Equipo"
-                                        value={equipo.descripcion}
+                                        value={equipo.descripcion} required
                                         onChange={(e) => setEquipo({ ...equipo, descripcion: e.target.value })}
                                     />
                                 </div>

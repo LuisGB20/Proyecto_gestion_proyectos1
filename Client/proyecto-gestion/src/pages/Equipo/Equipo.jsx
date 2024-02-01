@@ -9,6 +9,7 @@ import SidebarAdmin from '../../components/SidebarAdmin'
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Modal from 'react-modal';
+import Swal from 'sweetalert2'
 
 
 function Equipo() {
@@ -21,24 +22,52 @@ function Equipo() {
     const [nuevoProyecto, setNuevoProyecto] = useState('');
     const [modalIsOpen, setModalIsOpen] = useState(false);
 
-
+    const validarDatos = () => {
+        if (!nuevoNombre.trim()) {
+            Swal.fire({
+                icon: "error",
+                text: 'Por favor, ingresa un nuevo nombre válido'
+            });
+            return false;
+        }
+        if (!nuevaDescripcion.trim()) {
+            Swal.fire({
+                icon: "warning",
+                text: 'Por favor, ingresa una nueva descripción válida'
+            });
+            return false;
+        }
+        return true;
+    };
 
     const handleEliminarEquipo = async () => {
-        try {
-            const response = await fetch(`https://localhost:4000/equipos/${equipoId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: 'Esta acción eliminará el equipo. No podrás deshacerlo.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, eliminar equipo',
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(`https://localhost:4000/equipos/${equipoId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    });
+                    if (response.ok) {
+                        console.log(response)
+                    } else {
+                        console.error('Error al obtener los detalles del equipo');
+                    }
+                } catch (error) {
+                    console.error('Error de red al obtener los detalles del equipo', error);
                 }
-            });
-            if (response.ok) {
-                console.log(response)
-            } else {
-                console.error('Error al obtener los detalles del equipo');
             }
-        } catch (error) {
-            console.error('Error de red al obtener los detalles del equipo', error);
-        }
+        })
     };
 
     const closeModal = () => {
@@ -79,32 +108,30 @@ function Equipo() {
     }, [equipoId]);
 
     const handleEditarEquipo = async () => {
-
-        try {
-            const response = await fetch(`https://localhost:4000/equipos/${equipoId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    nombre: nuevoNombre,
-                    descripcion: nuevaDescripcion,
-                }),
-            });
-
-            if (response.ok) {
-                console.log('Equipo editado con éxito:', equipoId);
-                // Cierra el modal después de que la solicitud PUT sea exitosa
-                setModalIsOpen(false);
-
-            } else {
-                console.error('Error al editar el equipo');
+        if (validarDatos()) {
+            try {
+                const response = await fetch(`https://localhost:4000/equipos/${equipoId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        nombre: nuevoNombre,
+                        descripcion: nuevaDescripcion,
+                    }),
+                });
+                if (response.ok) {
+                    console.log('Equipo editado con éxito:', equipoId);
+                    // Cierra el modal después de que la solicitud PUT sea exitosa
+                    setModalIsOpen(false);
+                } else {
+                    console.error('Error al editar el equipo');
+                }
+            } catch (error) {
+                console.error('Error de red al editar el equipo', error);
             }
-        } catch (error) {
-            console.error('Error de red al editar el equipo', error);
         }
     };
-
 
     //Formatear como yyyy-mmm-dd
     function formatearFecha2(fecha) {
@@ -295,12 +322,14 @@ function Equipo() {
                             <div className="form-group mb-4">
                                 <label className="text-sm text-gray-600">Nuevo Nombre del Equipo:</label>
                                 <input
+                                    required
                                     type="text"
                                     className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
                                     value={nuevoNombre}
                                     onChange={(e) => setNuevoNombre(e.target.value)}
                                 />
                             </div>
+                            {nuevoNombre.trim() === '' && <p className="text-red-500 text-sm mb-2">El nombre es requerido</p>}
                             <div className="form-group mb-4">
                                 <label className="text-sm text-gray-600">Nueva Descripción:</label>
                                 <textarea
@@ -309,6 +338,7 @@ function Equipo() {
                                     onChange={(e) => setNuevaDescripcion(e.target.value)}
                                 />
                             </div>
+                            {nuevaDescripcion.trim() === '' && <p className="text-red-500 text-sm mb-2">La descripción es requerida</p>}
                             {/* <div className="form-group mb-6">
                                         <label className="text-sm text-gray-600">Nuevo Proyecto:</label>
                                         <input

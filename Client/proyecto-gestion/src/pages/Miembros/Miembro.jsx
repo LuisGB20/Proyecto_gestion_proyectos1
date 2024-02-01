@@ -4,6 +4,7 @@ import Header from "../../components/header";
 import SidebarAdmin from "../../components/SidebarAdmin";
 import perfil from "../../Img/perfil.png";
 import Modal from 'react-modal';
+import Swal from "sweetalert2";
 
 function Miembro() {
     const miembroId = useParams();
@@ -11,37 +12,93 @@ function Miembro() {
     const [editando, setEditando] = useState(false);
     const [rol, setRol] = useState("");
 
+    // Mensaje de Errores
+    const [nombreError, setNombreError] = useState("");
+    const [apellidoError, setApellidoError] = useState("");
+    const [emailError, setEmailError] = useState("");
+    const [equipoError, setEquipoError] = useState("");
+
+    const validarDatos = () => {
+        let errores = false;
+        if (!miembro.nombre) {
+            setNombreError("Por favor, ingresa el nombre.");
+            errores = true;
+        } else {
+            setNombreError("");
+        }
+        if (!miembro.apellido) {
+            setApellidoError("Por favor, ingresa el apellido.");
+            errores = true;
+        } else {
+            setApellidoError("");
+        }
+        if (!miembro.email) {
+            setEmailError("Por favor, ingresa el correo.");
+            errores = true;
+        } else {
+            setEmailError("");
+        }
+        if (!miembro.equipo) {
+            setEquipoError("Por favor, ingresa el equipo.");
+            errores = true;
+        } else {
+            setEquipoError("");
+        }
+        return !errores;
+    };
+
     const actualizarDatos = () => {
-        console.log(miembroId)
-        console.log(miembro.nombre);
-        console.log(miembro.apellido);
-        console.log(miembro.email);
-        console.log(miembro.rol);
-        console.log(miembro.equipo);
-        const response = fetch(`https://localhost:4000/usuarios/${Number(miembroId.miembroId)}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                nombre: miembro.nombre,
-                apellido: miembro.apellido,
-                email: miembro.email,
-                rol: miembro.rol,
-                equipo: miembro.equipo
+        if (validarDatos()) {
+            console.log(miembroId);
+            console.log(miembro.nombre);
+            console.log(miembro.apellido);
+            console.log(miembro.email);
+            console.log(miembro.rol);
+            console.log(miembro.equipo);
+    
+            fetch(`https://localhost:4000/usuarios/${Number(miembroId.miembroId)}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    nombre: miembro.nombre,
+                    apellido: miembro.apellido,
+                    email: miembro.email,
+                    rol: miembro.rol,
+                    equipo: miembro.equipo,
+                }),
             })
-        }).then(response => response.json())
+            .then(response => response.json())
             .then(data => {
-                    console.log(data)
-            }
-            )
+                console.log(data);
+                // Puedes agregar más lógica aquí si es necesario
+                MySwal.fire('¡Actualizado!', 'La información del miembro ha sido actualizada.', 'success');
+                setEditando(false); // Cerrar el modal después de la actualización
+            })
             .catch(error => {
-                    console.log(error)
+                console.log(error);
+                // Puedes manejar errores aquí si es necesario
+                MySwal.fire('Error', 'Hubo un problema al actualizar la información del miembro.', 'error');
+            });
+        }
+    };
+
+    const confirmarEliminacion = () => {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: 'Esta acción no se puede deshacer.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                eliminarMiembro();
             }
-        )
-        console.log(miembro)
-        console.log(rol)
-    }
+        });
+    };
 
     const eliminarMiembro = () => {
         alert("Eliminando miembro")
@@ -49,6 +106,7 @@ function Miembro() {
             method: "DELETE",
         }).then((res) => {
             if (res.ok) {
+                Swal.fire('¡Eliminado!', 'El miembro ha sido eliminado.', 'success');
                 window.location.href = "/miembros";
             }
         })
@@ -111,7 +169,7 @@ function Miembro() {
                             <button
                                 type="button"
                                 className="bg-red-500 text-white rounded px-4 py-2 mx-auto"
-                                onClick={eliminarMiembro}
+                                onClick={confirmarEliminacion}
                             >
                                 Eliminar
                             </button>
@@ -137,38 +195,46 @@ function Miembro() {
                     <div className="mb-4 flex flex-col">
                         <label htmlFor="nombre" className="font-semibold text-lg italic">Nombre</label>
                         <input
+                            required
                             type="text"
-                            className="rounded-lg h-10 border-2 outline-none text-lg font-medium pl-2"
+                            className={`rounded-lg h-10 border-2 outline-none text-lg font-medium pl-2 ${nombreError ? 'border-red-500' : ''}`}
                             value={miembro.nombre}
                             onChange={(e) => setMiembro({ ...miembro, nombre: e.target.value })}
                         />
+                        <p className="text-red-500 text-sm mt-1">{nombreError}</p>
                     </div>
                     <div className="mb-4 flex flex-col">
                         <label htmlFor="nombre" className="font-semibold text-lg italic">Apellido</label>
                         <input
+                            required
                             type="text"
-                            className="rounded-lg h-10 border-2 outline-none text-lg font-medium pl-2"
+                            className={`rounded-lg h-10 border-2 outline-none text-lg font-medium pl-2 ${apellidoError ? 'border-red-500' : ''}`}
                             value={miembro.apellido}
                             onChange={(e) => setMiembro({ ...miembro, apellido: e.target.value })}
                         />
+                        <p className="text-red-500 text-sm mt-1">{apellidoError}</p>
                     </div>
                     <div className="mb-4 flex flex-col">
                         <label htmlFor="nombre" className="font-semibold text-lg italic">Email</label>
                         <input
+                            required
                             type="text"
-                            className="rounded-lg h-10 border-2 outline-none text-lg font-medium pl-2"
+                            className={`rounded-lg h-10 border-2 outline-none text-lg font-medium pl-2 ${emailError ? 'border-red-500' : ''}`}
                             value={miembro.email}
                             onChange={(e) => setMiembro({ ...miembro, email: e.target.value })}
                         />
+                        <p className="text-red-500 text-sm mt-1">{emailError}</p>
                     </div>
                     <div className="mb-4 flex flex-col">
                         <label htmlFor="nombre" className="font-semibold text-lg italic">Equipo</label>
                         <input
+                            required
                             type="text"
-                            className="rounded-lg h-10 border-2 outline-none text-lg font-medium pl-2"
+                            className={`rounded-lg h-10 border-2 outline-none text-lg font-medium pl-2 ${equipoError ? 'border-red-500' : ''}`}
                             value={miembro.equipo}
                             onChange={(e) => setMiembro({ ...miembro, equipo: e.target.value })}
                         />
+                        <p className="text-red-500 text-sm mt-1">{equipoError}</p>
                     </div>
                     <div className="mb-4 flex flex-col">
                         <label htmlFor="nombre" className="font-semibold text-lg italic">Rol</label>

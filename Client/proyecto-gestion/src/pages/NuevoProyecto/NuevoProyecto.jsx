@@ -2,6 +2,7 @@ import  { useEffect, useState } from 'react';
 import Header from '../../components/header'
 import SidebarAdmin from '../../components/SidebarAdmin'
 import NuevoEquipo from '../NuevoEquipo/NuevoEquipo';
+import Swal from 'sweetalert2';
 
 function NuevoProyecto() {
     const [nuevoProyecto, setNuevoProyecto] = useState({
@@ -14,6 +15,13 @@ function NuevoProyecto() {
 
     const crearEquipo = async (e) => {
         e.preventDefault();
+        if (!nuevoProyecto.nombre || !nuevoProyecto.descripcion || !nuevoProyecto.fecha_inicio || !nuevoProyecto.fecha_fin || nuevoProyecto.estado === null) {
+            Swal.fire({
+                title: 'Todos los campos son obligatorios',
+                icon: 'warning',
+                text: 'Por favor, completa todos los campos'
+            })
+        }
         console.log(nuevoProyecto)
         try {
             const response = await fetch('https://localhost:4000/proyectos', {
@@ -26,12 +34,17 @@ function NuevoProyecto() {
             });
 
             if (response.ok) {
-                // Equipo creado exitosamente
-                alert('Equipo creado exitosamente');
+                Swal.fire({
+                    icon: 'success',
+                    text: 'Equipo creado exitosamente'
+                })
                 // Redirigir al usuario a la página de inicio al hacer on click de la alerta
                 window.location.href = '/proyectos'; // Cambia la ruta a la página de inicio
             } else {
-                // Manejo de error, puedes mostrar un mensaje al usuario, etc.
+                Swal.fire({
+                    icon: 'error',
+                    text: 'Hubo un problema al crear el proyecto'
+                })
             }
         } catch (error) {
             console.error('Error al crear el equipo:', error);
@@ -58,7 +71,7 @@ function NuevoProyecto() {
                                         Nombre
                                     </label>
                                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="Agrega un Nombre al Proyecto"
-                                        value={nuevoProyecto.nombre}
+                                        value={nuevoProyecto.nombre} required
                                         onChange={(e) => setNuevoProyecto({ ...nuevoProyecto, nombre: e.target.value })}
                                     />
                                 </div>
@@ -67,7 +80,7 @@ function NuevoProyecto() {
                                         Descripción
                                     </label>
                                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="text" type="text" placeholder="¿De qué se trata el Proyecto?"
-                                        value={nuevoProyecto.descripcion}
+                                        value={nuevoProyecto.descripcion} required
                                         onChange={(e) => setNuevoProyecto({ ...nuevoProyecto, descripcion: e.target.value })}
                                     />
                                 </div>
@@ -76,7 +89,7 @@ function NuevoProyecto() {
                                         Fecha de Inicio
                                     </label>
                                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="team" type="text" placeholder="¿Cuándo comenzará el Proyecto?" 
-                                    value={nuevoProyecto.fecha_inicio}
+                                    value={nuevoProyecto.fecha_inicio} required
                                     onChange={(e) => setNuevoProyecto({ ...nuevoProyecto, fecha_inicio: e.target.value })}
                                     />
                                 </div>
@@ -85,7 +98,7 @@ function NuevoProyecto() {
                                         Fecha de Finalización
                                     </label>
                                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="team" type="text" placeholder="¿Cuándo comenzará el Proyecto?" 
-                                    value={nuevoProyecto.fecha_fin}
+                                    value={nuevoProyecto.fecha_fin} required
                                     onChange={(e) => setNuevoProyecto({ ...nuevoProyecto, fecha_fin: e.target.value })}
                                     />
                                 </div>
