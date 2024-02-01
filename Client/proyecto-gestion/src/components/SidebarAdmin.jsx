@@ -3,7 +3,10 @@
 
     function SidebarAdmin() {
     const [isMenuOpen, setMenuOpen] = useState(false);
-
+    const cerrarSesion = () => {
+        sessionStorage.clear();
+        window.location.href = '/';
+    }
     return (
         <>
         {/* Estructura para pantallas grandes */}
@@ -36,7 +39,7 @@
             <li className='mx-auto text-center my-10'>
                 <Link
                 className='font-medium text-center text-lg italic mx-auto hover:bg-gradient-to-r hover:from-[#1E4C6A]  hover:to-[#1B7FC5] p-4 rounded-lg hover:text-white'
-                to='/UsuarioMiembro'
+                to='/miembros'
                 >
                 Miembros
                 </Link>
@@ -44,7 +47,7 @@
             <li className='mx-auto text-center my-10'>
                 <Link
                 className='font-medium text-center text-lg italic mx-auto hover:bg-gradient-to-r hover:from-[#1E4C6A]  hover:to-[#1B7FC5] p-4 rounded-lg hover:text-white'
-                to='/'
+                onClick={cerrarSesion}
                 >
                 Cerrar Sesión
                 </Link>

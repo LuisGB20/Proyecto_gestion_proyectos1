@@ -53,13 +53,11 @@ function App() {
 
           {/* Jefe */}
           <Route element={<JefeRoute />}>
-            <Route path='/UsuarioMiembro' element={<UsuarioMiembro />} />
-            <Route path='/Miembro' element={<Miembro />} />
-            {/* ya quedo */}
+            <Route path='/miembros' element={<UsuarioMiembro />} />
+            <Route path='/miembros/:miembroId' element={<Miembro />} />
             <Route path='/equipos' element={<TodosEquipos />} is /> 
             <Route path='/equipos/:equipoId' element={<Equipo />} />
             <Route path='/NuevoEquipo' element={<NuevoEquipo />} />
-            
             <Route path='/proyectos' element={<TodosProyectos />} />
             <Route path='/proyectos/:proyectoId' element={<Proyecto />} />
             <Route path='/NuevoProyecto' element={<NuevoProyecto />} />
