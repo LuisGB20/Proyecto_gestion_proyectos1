@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 
 import Header from '../../components/header';
 import Anadir from '../../Img/anadir.png';
@@ -20,6 +20,7 @@ function NuevoEquipo() {
         apellido: "",
         rol: ""
     });
+
 
     const traerTodosProyectos = async () => {
         const respuesta = await fetch('https://localhost:4000/proyectos', {
@@ -49,7 +50,7 @@ function NuevoEquipo() {
             })
     }
 
-    const agregarMiembro = (id, nombre, apellido, rol) => {
+    const agregarMiembro = (id, nombre, apellido, rol) => { 
         // Agregar el miembro al estado del equipo
         setEquipo((prevEquipo) => ({
             ...prevEquipo,
@@ -78,6 +79,7 @@ function NuevoEquipo() {
 
     const crearEquipo = async (e) => {
         e.preventDefault();
+
         try {
             console.log(equipo);
             const response = await fetch('https://localhost:4000/equipos', {
