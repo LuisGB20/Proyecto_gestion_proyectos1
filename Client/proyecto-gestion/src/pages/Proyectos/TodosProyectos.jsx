@@ -43,7 +43,7 @@ function TodosProyectos() {
                         </div>
                         <div className='grid grid-cols-3 gap-4 mx-5 overflow-auto h-[623px]'>
                             {proyectos.map(proyecto => (
-                                <Link key={proyecto.id} to={`/proyecto/${proyecto.id}`}>
+                                <Link key={proyecto.id} to={`/proyectos/${proyecto.id}`}>
                                     <TarjetasProyecto proyecto={proyecto} />
                                 </Link>
                             ))}
