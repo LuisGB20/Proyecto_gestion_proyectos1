@@ -44,12 +44,12 @@ function App() {
 
           {/* Miembros */}
           <Route element={<MiembroRoute />}>
-            <Route path='/ResourcesAndAssets' component={<ResourcesAndAssets />} />
-            <Route path='/SolicitudActivos' component={<SolicitudActivos />} />
-            <Route path='/SolicitudRecursos' component={<SolicitudRecursos />} />
-            <Route path='/TableroMiembros' component={<TableroMiembros />} />
-            <Route path='/Dashboard' component={<Dashboard />} />
-            <Route path='/DashboardEquipos' component={<DashboardEquipos />} />
+            <Route path='/ResourcesAndAssets' element={<ResourcesAndAssets />} />
+            <Route path='/SolicitudActivos' element={<SolicitudActivos />} />
+            <Route path='/SolicitudRecursos' element={<SolicitudRecursos />} />
+            <Route path='/TableroMiembros' element={<TableroMiembros />} />
+            <Route path='/Dashboard' element={<Dashboard />} />
+            <Route path='/DashboardEquipos' element={<DashboardEquipos />} />
           </Route>
 
           {/* Jefe */}

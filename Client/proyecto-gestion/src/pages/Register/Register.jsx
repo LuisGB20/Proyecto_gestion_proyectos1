@@ -123,10 +123,9 @@ function Register() {
                         text: "Código verificado",
                         timer: 3000
                     });
-                    handleQuestion();
+                    openModalPregunta();
                     setCodigoVerificacion("")
                     closeModalCorreo()
-                    openModalPregunta();
                 } else {
                     Swal.fire({
                         icon: "error",
@@ -185,10 +184,7 @@ function Register() {
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        if(!validar()) {
-            return;
-        }
+        validar()
         console.log(usuario)
         const respuesta = await fetch('https://localhost:4000/registro', {
             method: 'POST',
