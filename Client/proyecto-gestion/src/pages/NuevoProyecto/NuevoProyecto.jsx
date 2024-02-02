@@ -2,6 +2,7 @@ import  { useEffect, useState } from 'react';
 import Header from '../../components/header'
 import SidebarAdmin from '../../components/SidebarAdmin'
 import NuevoEquipo from '../NuevoEquipo/NuevoEquipo';
+import Swal from 'sweetalert2';
 
 function NuevoProyecto() {
     const [nuevoProyecto, setNuevoProyecto] = useState({
@@ -13,6 +14,15 @@ function NuevoProyecto() {
     })
 
     const crearEquipo = async (e) => {
+        if(nuevoProyecto.nombre.trim() === "" || nuevoProyecto.descripcion.trim() === "" || nuevoProyecto.fecha_inicio.trim() === "" || nuevoProyecto.fecha_fin.trim() === "" || nuevoProyecto.estado.trim() === ""){
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Todos los campos son obligatorios',
+            })
+            e.preventDefault();
+            return;
+        }
         e.preventDefault();
         console.log(nuevoProyecto)
         try {
