@@ -4,6 +4,7 @@ import Header from "../../components/header";
 import SidebarAdmin from "../../components/SidebarAdmin";
 import perfil from "../../Img/perfil.png";
 import Modal from 'react-modal';
+import Swal from "sweetalert2";
 
 function Miembro() {
     const miembroId = useParams();
@@ -18,6 +19,21 @@ function Miembro() {
         console.log(miembro.email);
         console.log(miembro.rol);
         console.log(miembro.equipo);
+        const forbiddenCharsRegex = /[<>`';"]/;
+        if (forbiddenCharsRegex.test(miembro.nombre) || forbiddenCharsRegex.test(miembro.apellido) || forbiddenCharsRegex.test(miembro.email) || forbiddenCharsRegex.test(miembro.rol) || forbiddenCharsRegex.test(miembro.equipo)) {
+            Swal.fire({
+                icon: "warning",
+                text: "Los campos no pueden contener caracteres especiales como <>`;',\""
+            });
+            return;
+        }
+        if (miembro.nombre.trim() === "" || miembro.apellido.trim() === "" || miembro.email.trim() === "" || miembro.rol.trim() === "" || miembro.equipo.trim() === "") {
+            Swal.fire({
+                icon: "warning",
+                text: "Por favor, complete todos los campos"
+            });
+            return;
+        }    
         const response = fetch(`https://localhost:4000/usuarios/${Number(miembroId.miembroId)}`, {
             method: "PUT",
             headers: {

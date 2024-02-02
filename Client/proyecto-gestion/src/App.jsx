@@ -24,6 +24,7 @@ import DashboardEquipos from "./pages/DashEquipos/DashboardEquipos";
 import Recuperar from './pages/RecuperarContraseña/Recuperar'
 import MiembroRoute from './Routes/MiembroRoute.jsx'
 import JefeRoute from "./Routes/JefeRoute.jsx";
+import Nopermitido from "./pages/NoPermitido/Nopermitido.jsx";
 
 function App() {
 
@@ -35,21 +36,22 @@ function App() {
           
           <Route path='/Profile' element={<Profile />} />
           <Route path='/Politicas' element={<Politicas />} />
+          <Route path='/NoAutorizado' element={<Nopermitido />} />
           <Route path='/*' element={<NotFound />} />
           <Route path='/RecuperarContraseña' element={<Recuperar />} /> {/* */}
           <Route path='/' element={<Home />} /> {/*  */}
           <Route path='/Login' element={<Login />} /> {/*  */}
           <Route path='/Register' element={<Register />} /> {/*  */}
-            <Route path='/PerfilMiembro' element={<PerfilMiembro />} />
+          <Route path='/PerfilMiembro' element={<PerfilMiembro />} />
 
           {/* Miembros */}
           <Route element={<MiembroRoute />}>
-            <Route path='/ResourcesAndAssets' element={<ResourcesAndAssets />} />
+            <Route path='/mensajeria' element={<TableroMiembros />} />
             <Route path='/SolicitudActivos' element={<SolicitudActivos />} />
             <Route path='/SolicitudRecursos' element={<SolicitudRecursos />} />
-            <Route path='/TableroMiembros' element={<TableroMiembros />} />
             <Route path='/Dashboard' element={<Dashboard />} />
             <Route path='/DashboardEquipos' element={<DashboardEquipos />} />
+            <Route path='/ResourcesAndAssets' element={<ResourcesAndAssets />} />
           </Route>
 
           {/* Jefe */}

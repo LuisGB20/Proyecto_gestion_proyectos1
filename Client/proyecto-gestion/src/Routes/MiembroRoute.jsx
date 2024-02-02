@@ -12,7 +12,7 @@ console.log(usuario)
   }
   if (usuario.rol_id === 1) {
     console.log("No es miembro");
-    return <Navigate to="/" />;
+    return <Navigate to="/NoAutorizado" />;
   }
   return <Outlet />;
 }

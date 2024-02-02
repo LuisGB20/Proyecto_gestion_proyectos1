@@ -89,7 +89,7 @@ function Login() {
                     contrasena: "",
                 })
                 sessionStorage.setItem('token', data.token)
-                window.location.href = 'https://localhost:5173/dashboard';
+                window.location.href = 'https://localhost:5173/';
                 closeModalPregunta();
             })
             .catch(error => {
@@ -162,7 +162,35 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        validar();
+        const forbiddenCharsRegex = /[<>`';"]/;
+        if (forbiddenCharsRegex.test(usuario.nombre) || forbiddenCharsRegex.test(usuario.apellido) || forbiddenCharsRegex.test(usuario.email) || forbiddenCharsRegex.test(usuario.contrasena)) {
+            Swal.fire({
+                icon: "warning",
+                text: "Los campos no pueden contener caracteres especiales como <>`;',\""
+            });
+            return;
+        }
+        if (usuario.email.trim() === "" || usuario.contrasena.trim() === "") {
+            Swal.fire({
+                icon: "warning",
+                text: "Por favor, complete todos los campos"
+            });
+            return;
+        }
+        if (usuario.contrasena.length < 8) {
+            Swal.fire({
+                icon: 'warning',
+                text: 'La contraseña debe tener al menos 8 caracteres'
+            });
+            return;
+        }        
+        if (!usuario.email.includes('@')) {
+            Swal.fire({
+                icon: "warning",
+                text: "El correo electrónico debe contener el símbolo '@'"
+            });
+            return;
+        }
         console.log(usuario)
         const respuesta = await fetch('https://localhost:4000/login', {
             method: 'POST',
@@ -178,7 +206,11 @@ function Login() {
             .then(response => response.json())
             .then(data => {
                 if (data.message === "Usuario no encontrado") {
-                    console.log("Usuario no encontrado");
+                    Swal.fire({
+                        icon: "error",
+                        text: "Usuario no encontrado"
+                    });
+                    return;
                 }
                 if (data.message === "Contraseña incorrecta") {
                     Swal.fire({
@@ -187,6 +219,7 @@ function Login() {
                     });
                     return;
                 }
+                console.log(data)
                 sessionStorage.setItem('usuario', JSON.stringify({
                     id: data.id,
                     nombre: data.nombre,
@@ -195,9 +228,9 @@ function Login() {
                     contrasena: data.contrasena,
                     pregunta_seguridad: data.pregunta_seguridad,
                     respuesta_seguridad: data.respuesta_seguridad,
-                    rol_id: data.rol_id
+                    rol_id: data.rol_id,
+                    equipo: data.equipo_id
                 }));
-
                 setPregunta(data.pregunta_seguridad)
                 enviarCorreo();
             })
@@ -239,18 +272,16 @@ function Login() {
                             className="bg-slate-100 w-11/12 h-10 mx-auto rounded-lg pl-4 outline-none"
                         />
                     </form>
-                    <div>
-                        <button className="bg-gradient-to-r from-blue-900 to-blue-500 text-white w-80 h-10 rounded-xl mx-auto my-5" onClick={handleSubmit}>Iniciar Sesion</button>
+                    <div className='flex flex-col justify-center align-middle'>
+                        <button className="bg-gradient-to-r from-blue-900 to-blue-500 text-white w-40 h-10 rounded-xl mx-auto my-5" onClick={handleSubmit}>Iniciar Sesion</button>
                         <p className="text-center mt-3 text-xl font-semibold italic">Nuevo Miembro?
                             <Link to='/Register'>
                                 <span className="text-blue-400 ml-2">Registrate ahora</span>
                             </Link>
                         </p>
-                        <p className='text-center mt-3 text-xl font-semibold italic mb-5'>
-                            <Link to="/RecuperarContraseña">
-                                <h4 className="text-[#00568D] font-medium text-center mt-4">Olvido Su Contraseña?</h4>
-                            </Link>
-                        </p>
+                        <p className='text-center mt-3 text-xl font-semibold italic mb-3'>Al iniciar sesión aceptas nuestras condiciones de uso y
+                        <Link to={"/Politicas"} className='text-blue-400'> politica de privacidad.</Link>
+                    </p>
                     </div>
                 </div>
             </div>

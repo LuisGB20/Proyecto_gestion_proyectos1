@@ -31,40 +31,33 @@
             </li>
             <li className='mx-auto text-center my-10'>
                 <Link
-                to='/TableroMiembros'
+                to='/mensajeria'
                 className='font-medium text-center text-lg italic mx-auto hover:bg-gradient-to-r hover:from-[#1E4C6A]  hover:to-[#1B7FC5] p-4 rounded-lg hover:text-white'
                 >
                 Tablero de miembros
                 </Link>
             </li>
-            <li className='mx-auto text-center my-10'>
-                <Link
-                to='/ResourcesAndAssets'
-                className='font-medium text-center text-lg italic mx-auto hover:bg-gradient-to-r hover:from-[#1E4C6A]  hover:to-[#1B7FC5] p-4 rounded-lg hover:text-white'
-                >
-                Recursos y activos
-                </Link>
-            </li>
-            <li className='mx-auto text-center my-10'>
+            {/* <li className='mx-auto text-center my-10'>
                 <Link
                 to='/SolicitudRecursos'
                 className='font-medium text-center text-lg italic mx-auto hover:bg-gradient-to-r hover:from-[#1E4C6A]  hover:to-[#1B7FC5] p-4 rounded-lg hover:text-white'
                 >
                 Recursos 
                 </Link>
-            </li>
+            </li> */}
             <li className='mx-auto text-center my-10'>
                 <Link
                 to='/SolicitudActivos'
                 className='font-medium text-center text-lg italic mx-auto hover:bg-gradient-to-r hover:from-[#1E4C6A]  hover:to-[#1B7FC5] p-4 rounded-lg hover:text-white'
                 >
-                activos
+                Recursos y activos
                 </Link>
             </li>
             <li className='mx-auto text-center my-10' onClick={cerrarSesion}>
                 <Link
                 className='font-medium text-center text-lg italic mx-auto hover:bg-gradient-to-r hover:from-[#1E4C6A]  hover:to-[#1B7FC5] p-4 rounded-lg hover:text-white'
                 to='/'
+                onClick={cerrarSesion}
                 >
                 Cerrar sesión
                 </Link>
@@ -72,7 +65,7 @@
             </ul>
         </div>
 
-        {/* Menú hamburguesa para pantallas pequeñas */}
+        {/* Menú hamburguesa para pantallas pequeñas
         <div className='lg:hidden'>
             <button
             className='bg-gray-800 text-white p-2'
@@ -149,7 +142,7 @@
                 </ul>
             </div>
             )}
-        </div>
+        </div> */}
         </>
     );
     }

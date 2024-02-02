@@ -55,7 +55,7 @@
             </ul>
         </div>
 
-        {/* Menú hamburguesa para pantallas pequeñas */}
+        {/* Menú hamburguesa para pantallas pequeñas
         <div className='lg:hidden'>
             <button
             className='bg-gray-800 text-white p-2'
@@ -115,7 +115,7 @@
                 </ul>
             </div>
             )}
-        </div>
+        </div> */}
         </>
     );
     }

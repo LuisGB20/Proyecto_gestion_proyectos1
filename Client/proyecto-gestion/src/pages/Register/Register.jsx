@@ -63,7 +63,11 @@ function Register() {
             .then(data => {
                 console.log(data)
                 if (data.message === "Pregunta y respuesta agregadas") {
-                    alert("Pregunta y respuesta agregadas")
+                    Swal.fire({
+                        icon: "success",
+                        text: "Preguntas y Respuestas agregadas",
+                        timer: 3000
+                    });
                     setUsuario({
                         nombre: "",
                         apellido: "",
@@ -77,7 +81,7 @@ function Register() {
                     setUsuario({
                         nombre: "",
                         apellido: "",
-                        email: "",
+                        email: "",  
                         contrasena: "",
                         rol_id: 3,
                     })
@@ -160,6 +164,18 @@ function Register() {
     }
 
     const validar = () => {
+
+    }
+
+    const handleSubmit = async (e) => {
+        const forbiddenCharsRegex = /[<>`';"]/;
+        if (forbiddenCharsRegex.test(usuario.nombre) || forbiddenCharsRegex.test(usuario.apellido) || forbiddenCharsRegex.test(usuario.email) || forbiddenCharsRegex.test(usuario.contrasena)) {
+            Swal.fire({
+                icon: "warning",
+                text: "Los campos no pueden contener caracteres especiales como <>`;',\""
+            });
+            return;
+        }
         if (usuario.nombre.trim() === "" || usuario.apellido.trim() === "" || usuario.email.trim() === "" || confirmarContra.trim() === "" || usuario.contrasena.trim() === "") {
             Swal.fire({
                 icon: "warning",
@@ -180,12 +196,14 @@ function Register() {
                 text: 'La contraseña debe tener al menos 8 caracteres'
             });
             return;
+        }        
+        if (!usuario.email.includes('@')) {
+            Swal.fire({
+                icon: "warning",
+                text: "El correo electrónico debe contener el símbolo '@'"
+            });
+            return;
         }
-    }
-
-    const handleSubmit = async (e) => {
-        validar()
-        console.log(usuario)
         const respuesta = await fetch('https://localhost:4000/registro', {
             method: 'POST',
             headers: {
@@ -297,7 +315,6 @@ function Register() {
                     <div className='flex flex-col w-full'>
                         <label className='text-xl font-semibold italic ml-8'>Rol</label>
                         <select className='bg-slate-100 w-11/12 h-10 mx-auto rounded-lg mb-4 pl-4 outline-none' value={usuario.rol_id} onChange={(e) => setUsuario({ ...usuario, rol_id: e.target.value })}>
-                            <option value="1" className='text-black'>Jefe</option>
                             <option value="2">Diseñador</option>
                             <option value="3">Programador</option>
                             <option value="4">Analista</option>

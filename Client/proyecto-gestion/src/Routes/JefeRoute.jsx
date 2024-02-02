@@ -13,7 +13,7 @@ console.log(token)
   }
   if (usuario.rol_id === 2 || usuario.rol_id === 3 || usuario.rol_id === 4) {
     console.log("No es jefe");
-    return <Navigate to="/Dashboard" />;
+    return <Navigate to="/NoAutorizado" />;
   }
   return <Outlet />;
 }

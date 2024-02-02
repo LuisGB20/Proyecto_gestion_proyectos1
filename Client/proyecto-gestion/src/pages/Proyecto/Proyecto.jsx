@@ -11,6 +11,7 @@ import SidebarAdmin from '../../components/SidebarAdmin'
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Modal from 'react-modal';
+import Swal from 'sweetalert2'
 
 
 function Proyecto() {
@@ -108,6 +109,14 @@ function Proyecto() {
         console.log(nuevaDescripcion);
         console.log(nuevaFechaFin);
         console.log(nuevoEstado);
+        if (nuevoNombre.trim() === "" || nuevaDescripcion.trim() === "" || nuevaFechaFin.trim() === "" || nuevoEstado.trim() === "") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Por favor, complete todos los campos.',
+            })
+            return;
+        }
         try {
             const response = await fetch(`https://localhost:4000/proyectos/${proyectoId}`, {
                 method: 'PUT',

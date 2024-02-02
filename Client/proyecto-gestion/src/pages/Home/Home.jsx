@@ -4,10 +4,13 @@ import Logo from '../../IMG/logo.png'
 import Sesion from '../../IMG/sesion.png'
 import Miembro from '../../IMG/miembro.png'
 import Diseño from '../../IMG/diseño.png'
+import Header from './components/Header'
 
 function Home() {
   return (
-    <div className='flex justify-center items-center bg-gradient-to-bl from-indigo-300 to-cyan-100 h-screen'>
+    <div className='flex flex-col'>
+      <Header/>
+          <div className='flex justify-center items-center bg-gradient-to-bl from-indigo-300 to-cyan-100 h-screen'>
       <div className='absolute sm:left-32'>
         <div className='flex mb-10 items-center'>
           <img src={Logo} alt='' className='w-12'/>
@@ -42,6 +45,7 @@ function Home() {
           </div>
         </div>
       </div>
+    </div>
     </div>
   )
 }

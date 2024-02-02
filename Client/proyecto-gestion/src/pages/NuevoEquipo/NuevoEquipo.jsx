@@ -1,9 +1,10 @@
-import  { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Header from '../../components/header';
 import Anadir from '../../Img/anadir.png';
 import SidebarAdmin from '../../components/SidebarAdmin';
 import TarjetaMiembro from './Components/TarjetaMiembro';
+import Swal from 'sweetalert2';
 
 function NuevoEquipo() {
     const [proyectos, setProyectos] = useState([]);
@@ -50,7 +51,7 @@ function NuevoEquipo() {
             })
     }
 
-    const agregarMiembro = (id, nombre, apellido, rol) => { 
+    const agregarMiembro = (id, nombre, apellido, rol) => {
         // Agregar el miembro al estado del equipo
         setEquipo((prevEquipo) => ({
             ...prevEquipo,
@@ -79,7 +80,14 @@ function NuevoEquipo() {
 
     const crearEquipo = async (e) => {
         e.preventDefault();
-
+        if(equipo.nombre.trim() === "" || equipo.descripcion.trim() === "" || equipo.proyecto === null || equipo.miembros.length === 0){
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Debe completar todos los campos del formulario',
+              })
+              return;
+        }
         try {
             console.log(equipo);
             const response = await fetch('https://localhost:4000/equipos', {
@@ -93,7 +101,13 @@ function NuevoEquipo() {
 
             if (response.ok) {
                 // Equipo creado exitosamente
-                alert('Equipo creado exitosamente');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Equipo creado exitosamente',
+                    showConfirmButton: false,
+                    timer: 1500,
+
+                })
                 // Redirigir al usuario a la página de inicio al hacer on click de la alerta
                 window.location.href = '/equipos'; // Cambia la ruta a la página de inicio
             } else {
@@ -126,6 +140,7 @@ function NuevoEquipo() {
                                     </label>
                                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" placeholder="Agrega un Nombre al Equipo"
                                         value={equipo.nombre}
+                                        required
                                         onChange={(e) => setEquipo({ ...equipo, nombre: e.target.value })}
                                     />
                                 </div>
@@ -135,6 +150,7 @@ function NuevoEquipo() {
                                     </label>
                                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="text" type="text" placeholder="Describe información General sobre el Equipo"
                                         value={equipo.descripcion}
+                                        required
                                         onChange={(e) => setEquipo({ ...equipo, descripcion: e.target.value })}
                                     />
                                 </div>
@@ -149,6 +165,7 @@ function NuevoEquipo() {
                                     <select className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="team'
                                         value={equipo.proyecto}
                                         onChange={(e) => setEquipo({ ...equipo, proyecto: Number(e.target.value) })}
+                                        required
                                     >
                                         <option value="" disabled>Selecciona un Proyecto</option>
                                         {proyectos.map((proyecto, index) => (
@@ -157,49 +174,49 @@ function NuevoEquipo() {
                                     </select>
                                 </div>
                                 <div className="mb-4 flex items-center">
-                                <select
-    className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="team'
-    value={nuevoMiembro.id}
-    onChange={(e) => {
-        const selectedMember = miembros.find(member => member.id === Number(e.target.value));
+                                    <select
+                                        className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="team'
+                                        value={nuevoMiembro.id}
+                                        onChange={(e) => {
+                                            const selectedMember = miembros.find(member => member.id === Number(e.target.value));
 
-        setNuevoMiembro({
-            id: selectedMember.id,
-            nombre: selectedMember.nombre,
-            apellido: selectedMember.apellido,
-            rol: selectedMember.rol_id === 2 ? 'Diseñador' :
-                selectedMember.rol_id === 3 ? 'Programador' :
-                    selectedMember.rol_id === 4 ? 'Analista' : 'Rol Desconocido',
-        });
-    }}
->
-    <option value="" disabled>Selecciona un Miembro</option>
-    {miembros.map((miembro, index) => (
-        <option key={index} value={miembro.id}>{`${miembro.nombre} ${miembro.apellido} - ${miembro.rol_id === 2 ? 'Diseñador' :
-                miembro.rol_id === 3 ? 'Programador' :
-                    miembro.rol_id === 4 ? 'Analista' : 'Rol Desconocido'
-            }`}</option>
-    ))}
-</select>
-<button
-    className="ml-4 bg-gray-800 text-white px-4 py-2 rounded"
-    onClick={(e) => {
-        e.preventDefault();
-        agregarMiembro(nuevoMiembro.id, nuevoMiembro.nombre, nuevoMiembro.apellido, nuevoMiembro.rol);
-    }}
->
-    Agregar
-</button>
+                                            setNuevoMiembro({
+                                                id: selectedMember.id,
+                                                nombre: selectedMember.nombre,
+                                                apellido: selectedMember.apellido,
+                                                rol: selectedMember.rol_id === 2 ? 'Diseñador' :
+                                                    selectedMember.rol_id === 3 ? 'Programador' :
+                                                        selectedMember.rol_id === 4 ? 'Analista' : 'Rol Desconocido',
+                                            });
+                                        }}
+                                    >
+                                        <option value="" disabled>Selecciona un Miembro</option>
+                                        {miembros.map((miembro, index) => (
+                                            <option key={index} value={miembro.id}>{`${miembro.nombre} ${miembro.apellido} - ${miembro.rol_id === 2 ? 'Diseñador' :
+                                                miembro.rol_id === 3 ? 'Programador' :
+                                                    miembro.rol_id === 4 ? 'Analista' : 'Rol Desconocido'
+                                                }`}</option>
+                                        ))}
+                                    </select>
+                                    <button
+                                        className="ml-4 bg-gray-800 text-white px-4 py-2 rounded"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            agregarMiembro(nuevoMiembro.id, nuevoMiembro.nombre, nuevoMiembro.apellido, nuevoMiembro.rol);
+                                        }}
+                                    >
+                                        Agregar
+                                    </button>
 
                                 </div>
 
                                 <div className="mb-8 p-4 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] w-full h-96 grid grid-cols-4 gap-4 ">
                                     {equipo.miembros.map((miembro, index) => (
                                         <TarjetaMiembro
-                                          key={index}
-                                          nombre={miembro.nombre}
-                                          rol={miembro.rol}
-                                          onDelete={() => eliminarMiembro(index)}
+                                            key={index}
+                                            nombre={miembro.nombre}
+                                            rol={miembro.rol}
+                                            onDelete={() => eliminarMiembro(index)}
                                         />
                                     ))}
                                 </div>
@@ -208,7 +225,7 @@ function NuevoEquipo() {
                         </div>
                         <div className=' my-3 w-full h-20 flex justify-between items-center'>
                             <button className='font-medium text-center text-lg bg-gradient-to-r from-[#1E4C6A]  to-[#1B7FC5] p-2 mx-5 my-3 rounded-lg text-white ml-auto mr-12'
-                            onClick={crearEquipo}>Crear Equipo</button>
+                                onClick={crearEquipo}>Crear Equipo</button>
                         </div>
                     </div>
                 </div>
