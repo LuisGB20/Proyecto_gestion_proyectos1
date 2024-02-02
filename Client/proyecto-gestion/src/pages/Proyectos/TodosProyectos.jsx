@@ -24,7 +24,7 @@ function TodosProyectos() {
     useEffect(() => {
         obtenerProyectos();
         console.log(proyectos);
-    }, [])
+    }, [proyectos])
 
     return (
         <>
@@ -41,14 +41,18 @@ function TodosProyectos() {
                                 </Link>
                             </div>
                         </div>
-                        <div className='grid grid-cols-3 gap-4 mx-5 overflow-auto h-[623px]'>
-                            {proyectos.map(proyecto => (
-                                <Link key={proyecto.id} to={`/proyectos/${proyecto.id}`}>
-                                    <TarjetasProyecto proyecto={proyecto} />
-                                </Link>
-                            ))}
-                            {/* <button className='font-medium text-center text-lg italic bg-gradient-to-r from-[#1E4C6A]  to-[#1B7FC5] p-2 ml-40 my-5 rounded-lg text-white'>Siguiente</button> */}
-                        </div>
+                        {proyectos.length > 0 ? (
+                                                    <div className='grid grid-cols-3 gap-4 mx-5 overflow-auto h-[623px]'>
+                                                    {proyectos.map(proyecto => (
+                                                        <Link key={proyecto.id} to={`/proyectos/${proyecto.id}`}>
+                                                            <TarjetasProyecto proyecto={proyecto} />
+                                                        </Link>
+                                                    ))}
+                                                    {/* <button className='font-medium text-center text-lg italic bg-gradient-to-r from-[#1E4C6A]  to-[#1B7FC5] p-2 ml-40 my-5 rounded-lg text-white'>Siguiente</button> */}
+                                                </div>
+                        ) : (
+                            <h1 className='text-2xl font-semibold italic p-5'>No hay proyectos registrados</h1>
+                        )}
                     </div>
                 </div>
             </div>

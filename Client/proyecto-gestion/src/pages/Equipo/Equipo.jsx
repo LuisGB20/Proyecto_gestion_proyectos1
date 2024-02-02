@@ -118,6 +118,23 @@ function Equipo() {
         return fechaFormateada;
     }
 
+    if (!equipo) {
+        return (
+            <div className='bg-slate-50 min-h-screen flex flex-col items-center justify-center'>
+                {/* Mostrar que no se ha encontrado el elemento solicitado */}
+                <p className='text-3xl font-semibold italic text-gray-800'>
+                    ¡Ups! No se encontró el elemento solicitado
+                </p>
+                <Link to="/proyectos">
+                    <button className='bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-md mt-6 focus:outline-none focus:ring focus:border-blue-300'>
+                        Volver al listado
+                    </button>
+                </Link>
+            </div>
+
+        );
+    }
+
     return (
 
         <div className='bg-slate-50'>

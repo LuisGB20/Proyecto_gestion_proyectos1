@@ -12,7 +12,7 @@ function Register() {
         contrasena: "",
         nombre: "",
         apellido: "",
-        rol_id: 3,
+        rol_id: 2,
     })
     const [confirmarContra, setConfirmaContra] = useState("")
     const [codigoVerificacion, setCodigoVerificacion] = useState("")

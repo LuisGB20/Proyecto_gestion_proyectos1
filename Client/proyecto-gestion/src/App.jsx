@@ -32,13 +32,14 @@ function App() {
       <BrowserRouter>
         <Routes>
           {/* General */}
+          
           <Route path='/Profile' element={<Profile />} />
           <Route path='/Politicas' element={<Politicas />} />
           <Route path='/*' element={<NotFound />} />
-          <Route path='/RecuperarContraseña' element={<Recuperar />} /> {/* responsive */}
-          <Route path='/' element={<Home />} /> {/* responsive */}
-          <Route path='/Login' element={<Login />} /> {/* responsive */}
-          <Route path='/Register' element={<Register />} /> {/* responsive */}
+          <Route path='/RecuperarContraseña' element={<Recuperar />} /> {/* */}
+          <Route path='/' element={<Home />} /> {/*  */}
+          <Route path='/Login' element={<Login />} /> {/*  */}
+          <Route path='/Register' element={<Register />} /> {/*  */}
             <Route path='/PerfilMiembro' element={<PerfilMiembro />} />
 
           {/* Miembros */}

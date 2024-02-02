@@ -10,10 +10,7 @@ function TodosEquipos() {
 
     const obtenerEquipos = async () => {
         const response = await fetch('https://localhost:4000/equipos', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
+            method: 'GET'
         })
             .then(response => response.json())
             .then(data => {
@@ -25,7 +22,7 @@ function TodosEquipos() {
     useEffect(() => {
         obtenerEquipos();
         console.log(equipos);
-    }, [])
+    }, [equipos])
 
     return (
         <div className='w-full h-full bg-slate-200'>
@@ -42,15 +39,19 @@ function TodosEquipos() {
                             </Link>
                         </div>
                     </div>
-                    <div className='grid grid-cols-3 gap-4 mx-5 overflow-auto h-[623px]'>
-                        {equipos.map(equipo => {
-                            return (
-                                <Link>
-                                    <TarjetasEquipo key={equipo.id} equipo={equipo} />
-                                </Link>
-                            )
-                        })}
-                    </div>
+                    {equipos.length > 0 ? (
+                                            <div className='grid grid-cols-3 gap-4 mx-5 overflow-auto h-[623px]'>
+                                            {equipos.map(equipo => {
+                                                return (
+                                                    <Link>
+                                                        <TarjetasEquipo key={equipo.id} equipo={equipo} />
+                                                    </Link>
+                                                )
+                                            })}
+                                        </div>
+                    ) : (
+                        <h1 className='text-2xl font-semibold italic p-5'>No hay equipos registrados</h1>
+                    )}
                 </div>
             </div>
         </div>
