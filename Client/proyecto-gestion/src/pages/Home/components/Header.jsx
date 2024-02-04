@@ -12,7 +12,7 @@ function Header() {
     }, [])
 
     return (
-        <header className="bg-blue-500 p-4">
+        <header className="bg-gradient-to-r from-[#1E4C6A]  to-[#1B7FC5] p-4 w-full">
             <div className="container mx-auto flex items-center justify-between">
                 <Link to="/" className="text-2xl font-bold text-white hover:text-gray-200">ProManSys</Link>
                 <nav className="space-x-4">

@@ -6,7 +6,7 @@ import SnapchatProyecto from '../../Img/snapchat.jpg'
 import GooglePlay from '../../Img/googleplay.png'
 import Instagram from '../../Img/instagram.png'
 import ServidorProyecto from '../../Img/servidor.png'
-import Financiamiento from '../../Img/financiamiento.png'
+import AsignacionEquipo from '../../Img/asignacion.png'
 import SidebarAdmin from '../../components/SidebarAdmin'
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -17,6 +17,7 @@ import Swal from 'sweetalert2'
 function Proyecto() {
     const { proyectoId } = useParams();
     const [proyecto, setProyecto] = useState(null);
+    const [equipos, setEquipos] = useState([]);
     const [editado, setEditado] = useState(false)
     const [nuevoNombre, setNuevoNombre] = useState('');
     const [nuevaDescripcion, setNuevaDescripcion] = useState('');
@@ -85,24 +86,41 @@ function Proyecto() {
         setEditado(!editado)
     };
 
+    const obtenerEquipos = async () => {
+        try {
+            const response = await fetch(`https://localhost:4000/equipos/proyecto/${proyectoId}`);
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+                setEquipos(data);
+            } else {
+                console.error('Error al obtener los equipos');
+            }
+        } catch (error) {
+            console.error('Error de red al obtener los equipos', error);
+        }
+    }
+
+    const fetchProyectoDetails = async () => {
+        try {
+            const response = await fetch(`https://localhost:4000/proyectos/${proyectoId}`);
+            if (response.ok) {
+                const data = await response.json();
+                setProyecto(data);
+            } else {
+                console.error('Error al obtener los detalles del equipo');
+            }
+        } catch (error) {
+            console.error('Error de red al obtener los detalles del equipo', error);
+        }
+    };
+
 
 
     useEffect(() => {
-        const fetchProyectoDetails = async () => {
-            try {
-                const response = await fetch(`https://localhost:4000/proyectos/${proyectoId}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    setProyecto(data);
-                } else {
-                    console.error('Error al obtener los detalles del equipo');
-                }
-            } catch (error) {
-                console.error('Error de red al obtener los detalles del equipo', error);
-            }
-        };
         fetchProyectoDetails();
-    }, [proyectoId]);
+        obtenerEquipos();
+    }, []);
 
     const handleEditarproyecto = async () => {
         console.log(nuevoNombre);
@@ -170,7 +188,7 @@ function Proyecto() {
                 <div className='w-full h-full'>
                     <div className='w-full h-full'>
                         <div className='bg-white my-3 w-full h-20 flex justify-between shadow'>
-                            <h1 className='text-2xl font-semibold  p-5'>PROYECTO: {proyecto.nombre}</h1>
+                            <h1 className='text-2xl font-semibold p-5'>PROYECTO: {proyecto.nombre}</h1>
                             <div className='flex space-x-4 p-5'>
                                 <button onClick={handleGuardarCambios} className='bg-blue-500 text-white px-4 py-2 rounded-md'>
                                     Editar
@@ -183,12 +201,9 @@ function Proyecto() {
                     </div>
 
                     {/*todo el body  */}
-
                     <div className='flex'>
-
                         {/* ladoIzquiero */}
                         <div className='w-1/2'>
-
                             <div className='flex items-center'>
                                 <div className="mb-4 ml-8 mt-4">
                                     <img
@@ -196,10 +211,7 @@ function Proyecto() {
                                         className="h-82 w-full  object-cover rounded-lg shadow-[0_10px_20px_rgba(39,_245,_62,_0.8)]"
                                     />
                                 </div>
-
-
                             </div>
-
                             <div className='flex items-center'>
                                 <div className='ml-8 mr-4'>
                                     <div className="flex">
@@ -230,42 +242,41 @@ function Proyecto() {
                         {/* ladoDerecho */}
                         <div className='w-1/2'>
                             <div className='ml-8 mb-4 mr-12 mt-6 '>
-                                <p className="text-lg font-bold">Nombre: {proyecto.nombre}</p>
-                                <p className="text-sm text-justify font-light"> Descripción:
+                                <p className="text-2xl font-semibold italic">Nombre: {proyecto.nombre}</p>
+                                <p className="text-xl text-justify font-light"> Descripción:
                                     {" " + proyecto.descripcion}
                                 </p>
-
-                                <p className="text-lg font-bold mt-8">Información </p>
-                                <ul className='list-none font-light'>
+                                <p className="text-xl text-justify font-light"> Estado:
+                                    {" " + proyecto.estado}
+                                </p>
+                                <p className="text-2xl font-semibold italic mt-8">Información </p>
+                                <ul className='text-xl text-justify font-light list-none'>
                                     <li>Equipos:</li>
-                                    <li>Miembros:</li>
+                                    {equipos.length > 0 ? (
+                                        equipos.map((equipo, index) => (
+                                            <li key={index}>
+                                                -{equipo.nombreEquipo}
+                                            </li>
+                                        ))
+                                    ) : (
+                                        <p>No hay equipos asignados</p>
+                                    )}
                                     <li>Fecha de Entrega: {formatearFecha(proyecto.fecha_fin)}</li>
-                                    <li>Recursos y Activos:</li>
                                 </ul>
                             </div>
-                            <div className=" flex mb-8 p-4  mr-8 ml-8 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.20)]">
+                            <Link to={`/tareas/proyecto/${proyectoId}`} className=" flex my-8 h-20 p-4  mr-8 ml-8 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.20)] hover:scale-105 transition duration-300">
                                 <div>
-                                    <img src={TeamProyecto} className='ml-2' />
+                                    <img src={AsignacionEquipo} className='ml-2 w-12 h-12' />
                                 </div>
+                                <div className='flex items-center ml-8 text-2xl font-normal italic'>Asignaciones</div>
+                            </Link>
 
-                                <div className='flex items-center ml-8 '>Equipo de Computo</div>
-
-                            </div>
-
-                            <div className=" flex mb-8  p-4  mr-8 ml-8 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.20)]">
+                            <Link to={`/recursos/proyecto/${proyectoId}`} className=" flex my-8 h-20 p-4  mr-8 ml-8 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.20)] hover:scale-105 transition duration-300">
                                 <div>
-                                    <img src={ServidorProyecto} className='ml-2' />
+                                    <img src={ServidorProyecto} className='ml-2 w-12 h-12' />
                                 </div>
-
-                                <div className='flex items-center ml-8 '>Servidor</div>
-
-                            </div>
-                            <div className=" flex mb-8  p-4  mr-8 ml-8 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.20)]">
-                                <div>
-                                    <img src={Financiamiento} className='ml-2' />
-                                </div>
-                                <div className='flex items-center ml-8 '>Financiamiento de $1000 MXN</div>
-                            </div>
+                                <div className='flex items-center ml-8 text-2xl font-normal italic'>Recursos y Activos</div>
+                            </Link>
                         </div>
                     </div>
                 </div>

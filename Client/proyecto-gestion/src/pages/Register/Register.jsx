@@ -314,7 +314,7 @@ function Register() {
                     </div>
                     <div className='flex flex-col w-full'>
                         <label className='text-xl font-semibold italic ml-8'>Rol</label>
-                        <select className='bg-slate-100 w-11/12 h-10 mx-auto rounded-lg mb-4 pl-4 outline-none' value={usuario.rol_id} onChange={(e) => setUsuario({ ...usuario, rol_id: e.target.value })}>
+                        <select className='text-xl font-semibold italic ml-8' value={usuario.rol_id} onChange={(e) => setUsuario({ ...usuario, rol_id: e.target.value })}>
                             <option value="2">Diseñador</option>
                             <option value="3">Programador</option>
                             <option value="4">Analista</option>

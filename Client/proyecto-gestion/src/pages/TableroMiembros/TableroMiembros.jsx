@@ -3,9 +3,11 @@ import Header from '../../components/header';
 import SidebarMiDashboard from '../../components/SidebarMiDashboard';
 import Mensaje from './components/Mensaje';
 import Modal from 'react-modal';
+import Swal from 'sweetalert2';
 
 function TableroMiembros() {
-    const [mensaje, setMensaje] = useState({});
+    const [actualizar, setActualizar] = useState(false)
+    const [mensaje, setMensaje] = useState("");
     const [nuevoMensaje, setNuevoMensaje] = useState('');
     const [mensajes, setMensajes] = useState([]);
     const usuario = JSON.parse(sessionStorage.getItem('usuario'));
@@ -21,6 +23,22 @@ function TableroMiembros() {
     const handleCloseModal = () => {
         setModalOpen(false);
     };
+
+    const obtenerMensajes = () => {
+        fetch(`https://localhost:4000/comentarios/${equipo}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                setMensajes(data);
+            })
+            .catch(error => {console.log(error)})
+    };
+
 
     const handleAgregarMensaje = () => {
         fetch('https://localhost:4000/comentarios', {
@@ -38,7 +56,15 @@ function TableroMiembros() {
             .then(data => {
                 console.log(data);
                 setMensaje({ mensaje: '' }); // Limpiar el input de mensaje después de agregar el mensaje.
-                alert('Mensaje agregado correctamente.'); // Mostrar un mensaje de éxito.
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Mensaje agregado correctamente',
+                    showConfirmButton: true,
+                    confirmButtonText: 'Ok',
+
+                })
+                setActualizar(!actualizar)
+                obtenerMensajes()
             })
             .catch(error => {
                 console.error(error);
@@ -63,7 +89,15 @@ function TableroMiembros() {
             .then(response => response.json())
             .then(data => {
                 console.log(data);
-                alert('Mensaje editado correctamente.'); // Mostrar un mensaje de éxito.
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Mensaje editado correctamente',
+                    showConfirmButton: true,
+                    confirmButtonText: 'Ok',
+
+                })
+                setActualizar(!actualizar)
+                obtenerMensajes()
             })
             .catch(error => {
                 console.error(error);
@@ -82,31 +116,23 @@ function TableroMiembros() {
         .then(response => response.json())
         .then(data => {
             console.log(data);
-            alert('Mensaje eliminado correctamente.'); // Mostrar un mensaje de éxito.
+            Swal.fire({
+                icon: 'success',
+                title: 'Mensaje eliminado correctamente',
+                showConfirmButton: true,
+                confirmButtonText: 'Ok',
+            })
+            setActualizar(!actualizar)
+            obtenerMensajes()
         })
         .catch(error => {
             console.error(error);
         })
     };
 
-    const obtenerMensajes = () => {
-        fetch(`https://localhost:4000/comentarios/${equipo}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                setMensajes(data);
-            })
-            .catch(error => {console.log(error)})
-    };
-
     useEffect(() => {
         obtenerMensajes();
-    }, []);
+    }, [actualizar]);
 
     return (
         <div className='w-full h-full bg-slate-200'>

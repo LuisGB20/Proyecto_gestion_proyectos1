@@ -15,14 +15,6 @@
             <li className='mx-auto text-center my-10'>
                 <Link
                 className='font-medium text-center text-lg italic mx-auto hover:bg-gradient-to-r hover:from-[#1E4C6A]  hover:to-[#1B7FC5] p-4 rounded-lg hover:text-white'
-                to='/dashboard-admin'
-                >
-                Dashboard administrador
-                </Link>
-            </li>
-            <li className='mx-auto text-center my-10'>
-                <Link
-                className='font-medium text-center text-lg italic mx-auto hover:bg-gradient-to-r hover:from-[#1E4C6A]  hover:to-[#1B7FC5] p-4 rounded-lg hover:text-white'
                 to='/proyectos'
                 >
                 Proyectos
@@ -44,6 +36,22 @@
                 Miembros
                 </Link>
             </li>
+            <li className='mx-auto text-center my-10'>
+                <Link
+                className='font-medium text-center text-lg italic mx-auto hover:bg-gradient-to-r hover:from-[#1E4C6A]  hover:to-[#1B7FC5] p-4 rounded-lg hover:text-white'
+                to='/Recursosy/oActivos'
+                >
+                Recursos y activos
+                </Link>
+            </li>
+            {/* <li className='mx-auto text-center my-10'>
+                <Link
+                className='font-medium text-center text-lg italic mx-auto hover:bg-gradient-to-r hover:from-[#1E4C6A]  hover:to-[#1B7FC5] p-4 rounded-lg hover:text-white'
+                to='/Tareas'
+                >
+                Tareas
+                </Link>
+            </li> */}
             <li className='mx-auto text-center my-10'>
                 <Link
                 className='font-medium text-center text-lg italic mx-auto hover:bg-gradient-to-r hover:from-[#1E4C6A]  hover:to-[#1B7FC5] p-4 rounded-lg hover:text-white'

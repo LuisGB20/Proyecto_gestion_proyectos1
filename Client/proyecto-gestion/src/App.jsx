@@ -25,6 +25,12 @@ import Recuperar from './pages/RecuperarContraseña/Recuperar'
 import MiembroRoute from './Routes/MiembroRoute.jsx'
 import JefeRoute from "./Routes/JefeRoute.jsx";
 import Nopermitido from "./pages/NoPermitido/Nopermitido.jsx";
+import NuevoMiembro from "./pages/NuevoMiembro/NuevoMiembro.jsx";
+import SinEquipo from "./pages/SinEquipo/SinEquipo.jsx";
+import RecursosActivosAdmin from "./pages/RecursosActivosAdmin/RecursosActivosAdmin.jsx";
+import Tareas from "./pages/Tareas/Tareas.jsx";
+import TareasProyecto from "./pages/Tareas/TareasProyecto.jsx";
+import RecursosProyecto from "./pages/RecursosProyecto/RecursosProyecto.jsx";
 
 function App() {
 
@@ -37,6 +43,7 @@ function App() {
           <Route path='/Profile' element={<Profile />} />
           <Route path='/Politicas' element={<Politicas />} />
           <Route path='/NoAutorizado' element={<Nopermitido />} />
+          <Route path='/SinEquipo' element={<SinEquipo />} />
           <Route path='/*' element={<NotFound />} />
           <Route path='/RecuperarContraseña' element={<Recuperar />} /> {/* */}
           <Route path='/' element={<Home />} /> {/*  */}
@@ -48,22 +55,27 @@ function App() {
           <Route element={<MiembroRoute />}>
             <Route path='/mensajeria' element={<TableroMiembros />} />
             <Route path='/SolicitudActivos' element={<SolicitudActivos />} />
-            <Route path='/SolicitudRecursos' element={<SolicitudRecursos />} />
+            {/* <Route path='/SolicitudRecursos' element={<SolicitudRecursos />} /> */}
             <Route path='/Dashboard' element={<Dashboard />} />
             <Route path='/DashboardEquipos' element={<DashboardEquipos />} />
-            <Route path='/ResourcesAndAssets' element={<ResourcesAndAssets />} />
+            {/* <Route path='/ResourcesAndAssets' element={<ResourcesAndAssets />} /> */}
           </Route>
 
           {/* Jefe */}
           <Route element={<JefeRoute />}>
             <Route path='/miembros' element={<UsuarioMiembro />} />
             <Route path='/miembros/:miembroId' element={<Miembro />} />
-            <Route path='/equipos' element={<TodosEquipos />} is /> 
+            <Route path='/nuevoMiembro' element={<NuevoMiembro />} />
+            <Route path='/equipos' element={<TodosEquipos />}/> 
             <Route path='/equipos/:equipoId' element={<Equipo />} />
             <Route path='/NuevoEquipo' element={<NuevoEquipo />} />
             <Route path='/proyectos' element={<TodosProyectos />} />
             <Route path='/proyectos/:proyectoId' element={<Proyecto />} />
             <Route path='/NuevoProyecto' element={<NuevoProyecto />} />
+            <Route path='/Recursosy/oActivos' element={<RecursosActivosAdmin />} />
+            <Route path='/Tareas/:equipoId' element={<Tareas />} />
+            <Route path='/Tareas/proyecto/:proyectoId' element={<TareasProyecto />} />
+            <Route path='/recursos/proyecto/:proyectoId' element={<RecursosProyecto />} />
           </Route>
         </Routes>
       </BrowserRouter>

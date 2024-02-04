@@ -15,7 +15,7 @@ import Swal from 'sweetalert2'
 function Equipo() {
     const { equipoId } = useParams();
     const [miembros, setMiembros] = useState([])
-    const [equipo, setEquipo] = useState(null);
+    const [equipo, setEquipo] = useState();
     const [editado, setEditado] = useState(false)
     const [nuevoNombre, setNuevoNombre] = useState('');
     const [nuevaDescripcion, setNuevaDescripcion] = useState('');
@@ -50,37 +50,41 @@ function Equipo() {
     const handleGuardarCambios = () => {
         console.log(equipo);
         console.log('Editar equipo:', equipoId);
-        setNuevoNombre(equipo.equipoNombre);
-        setNuevaDescripcion(equipo.equipoDescripcion);
+        setNuevoNombre(equipo[0].equipoNombre);
+        setNuevaDescripcion(equipo[0].equipoDescripcion);
         console.log(nuevoNombre, nuevaDescripcion);
         // Lógica para guardar los cambios
         setModalIsOpen(true);
         // Cierra el modal
         setEditado(!editado)
+
+    };
+
+    const fetchEquipoDetails = async () => {
+        try {
+            const response = await fetch(`https://localhost:4000/equipos/${equipoId}`);
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+                setEquipo(data);
+                // Directamente asigna la lista de miembros al estado
+                setMiembros(data.map(item => ({ miembro: item.miembros, idUsuario: item.idUsuario })));
+
+            } else {
+                console.error('Error al obtener los detalles del equipo');
+            }
+        } catch (error) {
+            console.error('Error de red al obtener los detalles del equipo', error);
+        }
     };
 
 
     useEffect(() => {
-        const fetchEquipoDetails = async () => {
-            try {
-                const response = await fetch(`https://localhost:4000/equipos/${equipoId}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    setEquipo(data[0]);
-                    // Directamente asigna la lista de miembros al estado
-                    setMiembros(data.map(item => ({ miembro: item.miembros, idUsuario: item.idUsuario })));
-                } else {
-                    console.error('Error al obtener los detalles del equipo');
-                }
-            } catch (error) {
-                console.error('Error de red al obtener los detalles del equipo', error);
-            }
-        };
-        fetchEquipoDetails();
-    }, [equipoId]);
+                fetchEquipoDetails()
+    }, []);
 
     const handleEditarEquipo = async () => {
-        if(nuevoNombre.trim() === "" || nuevaDescripcion.trim() === "") {
+        if (nuevoNombre.trim() === "" || nuevaDescripcion.trim() === "") {
             Swal.fire({
                 icon: 'warning',
                 title: 'Por favor, complete todos los campos',
@@ -89,7 +93,6 @@ function Equipo() {
             )
             return;
         }
-
         try {
             const response = await fetch(`https://localhost:4000/equipos/${equipoId}`, {
                 method: 'PUT',
@@ -101,7 +104,6 @@ function Equipo() {
                     descripcion: nuevaDescripcion,
                 }),
             });
-
             if (response.ok) {
                 console.log('Equipo editado con éxito:', equipoId);
                 // Cierra el modal después de que la solicitud PUT sea exitosa
@@ -119,30 +121,11 @@ function Equipo() {
     //Formatear como yyyy-mmm-dd
     function formatearFecha2(fecha) {
         const date = new Date(fecha);
-
         const year = date.getFullYear();
         const month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are zero-based
         const day = ('0' + date.getDate()).slice(-2);
-
         const fechaFormateada = `${year}-${month}-${day}`;
         return fechaFormateada;
-    }
-
-    if (!equipo) {
-        return (
-            <div className='bg-slate-50 min-h-screen flex flex-col items-center justify-center'>
-                {/* Mostrar que no se ha encontrado el elemento solicitado */}
-                <p className='text-3xl font-semibold italic text-gray-800'>
-                    ¡Ups! No se encontró el elemento solicitado
-                </p>
-                <Link to="/proyectos">
-                    <button className='bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-md mt-6 focus:outline-none focus:ring focus:border-blue-300'>
-                        Volver al listado
-                    </button>
-                </Link>
-            </div>
-
-        );
     }
 
     return (
@@ -168,7 +151,7 @@ function Equipo() {
                         <div className='w-full h-full'>
                             <div className='w-full h-full'>
                                 <div className='bg-white my-3 w-full h-20 flex justify-between shadow'>
-                                    <h1 className='text-2xl font-semibold  p-5'>EQUIPO: {equipo.equipoNombre}</h1>
+                                    <h1 className='text-2xl font-semibold  p-5'>EQUIPO: {equipo[0].equipoNombre}</h1>
                                     <div className='flex space-x-4 p-5'>
                                         <button onClick={handleGuardarCambios} className='bg-blue-500 text-white px-4 py-2 rounded-md'>
                                             Editar
@@ -177,14 +160,10 @@ function Equipo() {
                                             Eliminar
                                         </button>
                                     </div>
-
                                 </div>
                             </div>
-
                             {/*todo el body  */}
-
                             <div className='flex'>
-
                                 {/* ladoIzquiero */}
                                 <div className='w-1/2'>
 
@@ -195,14 +174,12 @@ function Equipo() {
                                                 className="h-120 w-full  object-cover rounded-lg shadow-[0_10px_20px_rgba(39,_245,146,_0.8)]"
                                             />
                                         </div>
-
-
                                     </div>
                                     <div className='ml-8 mb-4 mt-4 font-semibold'>Miembros</div>
                                     <div className='flex items-center'>
                                         <div className='ml-8 mr-4'>
                                             <div className="flex">
-                                                {miembros.map((miembro) => (
+                                                {(miembros.length > 0 || !miembros) ? (miembros.map((miembro) => (
                                                     <Link to={`/miembro/${miembro.idUsuario}`}>
                                                         <img
                                                             src={Miembro1}
@@ -211,24 +188,12 @@ function Equipo() {
                                                         />
                                                     </Link>
 
-                                                ))}
-                                                {/* <div className='ml-2 relative'>
-                                                            <img
-                                                                src={Miembro1}
-                                                                alt="Imagen 3"
-                                                                className="h-30 w-32 rounded-lg shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px]"
-                                                            />
-                                                            <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center opacity-55 bg-black rounded-lg">
-                                                                <p className="text-white text-center p-2">More</p>
-                                                            </div>
-                                                        </div> */}
-
-
+                                                ))) : (
+                                                    null
+                                                )}
                                             </div>
                                         </div>
-
                                     </div>
-
                                 </div>
 
 
@@ -237,58 +202,35 @@ function Equipo() {
                                 <div className='w-1/2'>
 
                                     <div className='ml-8 mb-4 mr-12 mt-6 '>
-                                        <p className="text-lg font-bold">Descripción del Equipo</p>
-                                        <p className="text-sm text-justify font-light">
-                                            {equipo.equipoDescripcion}
+                                        <p className="text-2xl font-semibold italic">Descripción del Equipo</p>
+                                        <p className="text-xl text-justify font-light">
+                                            {equipo[0].equipoDescripcion}
                                         </p>
 
                                         <p className="text-lg font-bold mt-8">Información </p>
                                         <ul className='list-none font-light text-2xl'>
-                                            <li>Proyecto: {equipo.proyectoNombre}</li>
+                                            <li>Proyecto: {equipo[0].proyectoNombre}</li>
                                             <li>Miembros:</li>
                                             {
-                                                miembros.map((miembro) => (
-                                                    <h2 className='italic'>
+                                                (miembros[0].idUsuario !== null ) ? (miembros.map((miembro, index) => (
+                                                    <h2 key={index} className='italic'>
                                                         -{miembro.miembro}
                                                     </h2>
-                                                ))
+                                                ))) : (
+                                                    <p>No hay miembros</p>
+                                                )
                                             }
-                                            <li>Fecha de Inicio: {formatearFecha2(equipo.fecha_inicio)}</li>
-                                            <li>Administración de Equipo:</li>
+                                            <li>Fecha de Inicio: {formatearFecha2(equipo[0].fecha_inicio)}</li>
                                         </ul>
                                     </div>
-
-                                    <div className=" flex mb-8 p-4  mr-8 ml-8 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.20)]">
+                                    <Link to={`/Tareas/${equipoId}`} className=" flex my-8 h-20 p-4  mr-8 ml-8 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.20)] hover:scale-105 transition duration-300">
                                         <div>
-                                            <img src={TeamProyecto} className='ml-2' />
+                                            <img src={AsignacionEquipo} className='ml-2 w-12 h-12' />
                                         </div>
-
-                                        <div className='flex items-center ml-8 '>Equipo de Computo</div>
-
-                                    </div>
-
-                                    <div className=" flex mb-8  p-4  mr-8 ml-8 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.20)]">
-                                        <div>
-                                            <img src={RolesEquipo} className='ml-2' />
-                                        </div>
-
-                                        <div className='flex items-center ml-8 '>Roles</div>
-
-                                    </div>
-                                    <div className=" flex mb-8  p-4  mr-8 ml-8 shadow-[4.0px_8.0px_8.0px_rgba(0,0,0,0.20)]">
-                                        <div>
-                                            <img src={AsignacionEquipo} className='ml-2' />
-                                        </div>
-
-                                        <div className='flex items-center ml-8 '>Asignación</div>
-
-                                    </div>
-
-
+                                        <div className='flex items-center ml-8 text-2xl font-normal italic'>Asignaciones</div>
+                                    </Link>
                                 </div>
-
                             </div>
-
                         </div>
                     </div>
                     <Modal
@@ -319,16 +261,6 @@ function Equipo() {
                                     onChange={(e) => setNuevaDescripcion(e.target.value)}
                                 />
                             </div>
-                            {/* <div className="form-group mb-6">
-                                        <label className="text-sm text-gray-600">Nuevo Proyecto:</label>
-                                        <input
-                                            type="text"
-                                            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
-                                            value={nuevoProyecto}
-                                            onChange={(e) => setNuevoProyecto(e.target.value)}
-                                        />
-                                    </div> */}
-                            {/* Botón de guardar cambios */}
                             <button
                                 onClick={handleEditarEquipo}
                                 className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"

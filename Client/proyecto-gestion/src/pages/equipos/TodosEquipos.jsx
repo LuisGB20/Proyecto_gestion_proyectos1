@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom'
 import Header from '../../components/header'
 import SidebarAdmin from '../../components/SidebarAdmin'
@@ -22,7 +21,7 @@ function TodosEquipos() {
     useEffect(() => {
         obtenerEquipos();
         console.log(equipos);
-    }, [equipos])
+    }, [])
 
     return (
         <div className='w-full h-full bg-slate-200'>
@@ -35,7 +34,6 @@ function TodosEquipos() {
                             <h1 className='text-2xl font-semibold italic p-5'>Equipos</h1>
                             <Link to='/NuevoEquipo'>
                                 <button className='font-medium text-center text-lg italic bg-gradient-to-r from-[#1E4C6A]  to-[#1B7FC5] p-2 mx-5 my-3 rounded-lg text-white'>Agregar nuevo equipo</button>
-
                             </Link>
                         </div>
                     </div>
@@ -43,7 +41,7 @@ function TodosEquipos() {
                                             <div className='grid grid-cols-3 gap-4 mx-5 overflow-auto h-[623px]'>
                                             {equipos.map(equipo => {
                                                 return (
-                                                    <Link>
+                                                    <Link to={`/equipos/${equipo.id}`}>
                                                         <TarjetasEquipo key={equipo.id} equipo={equipo} />
                                                     </Link>
                                                 )

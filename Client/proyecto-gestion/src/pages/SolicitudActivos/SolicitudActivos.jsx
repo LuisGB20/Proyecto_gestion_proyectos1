@@ -109,18 +109,19 @@ function SolicitudActivos() {
 
     return (
         <div className='w-full h-full bg-slate-200'>
-            <Header />
+            <Header area={"Solicitud de recursos y/o activos"}/>
             <div className='flex w-full h-full'>
                 <SidebarMiDashboard />
                 <div className='w-full'>
                     <div className='bg-white my-3 w-full h-20 flex justify-between'>
                         <h1 className='text-2xl font-semibold italic p-5'>Recursos y Activos</h1>
-                        <button
+                        {/* <button
                             className='bg-gradient-to-r from-[#1E4C6A] to-[#1B7FC5] text-white rounded p-2 mx-5 h-16 my-auto'
                             onClick={openModal}
                         >
                             Agregar Mensaje
-                        </button>                        </div>
+                        </button>                         */}
+                        </div>
                     <div className='flex w-full h-auto'>
                         <div className='w-1/2 m-5 bg-white rounded-2xl'>
                             <div className=" overflow-auto w-full my-5 flex justify-center align-middle">

@@ -5,6 +5,11 @@ function MiembroRoute() {
   let usuario = JSON.parse(sessionStorage.getItem("usuario"));
 console.log(usuario)
   let logueado = token && usuario;
+  
+  if(usuario.equipo === null){
+    console.log("No tiene equipo");
+    return <Navigate to="/NoAutorizado" />;
+  }
 
   if (!logueado) {
     console.log("No está logueado");
